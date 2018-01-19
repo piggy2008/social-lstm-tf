@@ -106,6 +106,7 @@ class SocialModel():
         with tf.name_scope("Distribution_parameters_stuff"):
             # self.initial_output = tf.zeros([args.maxNumPeds, self.output_size], name="distribution_parameters")
             self.initial_output = tf.split(tf.zeros([args.maxNumPeds, self.output_size]), args.maxNumPeds, 0)
+            self.initial_output2 = tf.split(tf.zeros([args.maxNumPeds, self.output_size2]), args.maxNumPeds, 0)
 
         # Tensor to represent non-existent ped
         with tf.name_scope("Non_existent_ped_stuff"):
@@ -158,6 +159,8 @@ class SocialModel():
                 with tf.name_scope("output_linear_layer"):
                     self.initial_output[ped] = tf.nn.xw_plus_b(self.output_states[ped], self.output_w, self.output_b)
 
+                if (seq == args.seq_length): # last frame
+                    self.initial_output2[ped] = tf.nn.xw_plus_b(self.output_states[ped], self.output_w, self.output_b)
                 # with tf.name_scope("store_distribution_parameters"):
                 #    # Store the distribution parameters for the current ped
                 #    self.initial_output[ped] = output
@@ -225,11 +228,11 @@ class SocialModel():
             self.output_b = tf.get_variable("output_b", [self.output_size], initializer=tf.constant_initializer(0.01))
 
         # Define variables for the output linear layer for many to seq
-        # with tf.variable_scope("output_layer"):
-        #     self.output2_w = tf.get_variable("output2_w", [args.rnn_size, self.output_size2],
-        #                                     initializer=tf.truncated_normal_initializer(stddev=0.01))
-        #     self.output2_b = tf.get_variable("output2_b", [self.output_size2],
-        #                                     initializer=tf.constant_initializer(0.01))
+        with tf.variable_scope("output_layer"):
+            self.output2_w = tf.get_variable("output2_w", [args.rnn_size, self.output_size2],
+                                            initializer=tf.truncated_normal_initializer(stddev=0.01))
+            self.output2_b = tf.get_variable("output2_b", [self.output_size2],
+                                            initializer=tf.constant_initializer(0.01))
 
     def tf_2d_normal(self, x, y, mux, muy, sx, sy, rho):
         '''

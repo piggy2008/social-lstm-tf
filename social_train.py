@@ -8,7 +8,7 @@ import pickle
 from social_model import SocialModel
 from social_utils import SocialDataLoader
 from grid import getSequenceGridMask
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 def main():
     parser = argparse.ArgumentParser()
@@ -27,7 +27,7 @@ def main():
     parser.add_argument('--batch_size', type=int, default=10,
                         help='minibatch size')
     # Length of sequence to be considered parameter
-    parser.add_argument('--seq_length', type=int, default=5,
+    parser.add_argument('--seq_length', type=int, default=20,
                         help='RNN sequence length')
     # Number of epochs parameter
     parser.add_argument('--num_epochs', type=int, default=50,
@@ -59,17 +59,17 @@ def main():
     parser.add_argument('--grid_size', type=int, default=2,
                         help='Grid size of the social grid')
     # Maximum number of pedestrians to be considered
-    parser.add_argument('--maxNumPeds', type=int, default=27,
+    parser.add_argument('--maxNumPeds', type=int, default=51,
                         help='Maximum Number of Pedestrians')
     # The leave out dataset
-    parser.add_argument('--leaveDataset', type=int, default=1,
+    parser.add_argument('--leaveDataset', type=int, default=0,
                         help='The dataset index to be left out in training')
     args = parser.parse_args()
     train(args)
 
 
 def train(args):
-    datasets = range(2)
+    datasets = range(5)
     # Remove the leaveDataset from datasets
     datasets.remove(args.leaveDataset)
 

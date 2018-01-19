@@ -10,7 +10,7 @@ from social_utils import SocialDataLoader
 from social_model import SocialModel
 from grid import getSequenceGridMask
 # from social_train import getSocialGrid, getSocialTensor
-
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 def get_mean_error(predicted_traj, true_traj, observed_length, maxNumPeds):
     '''
@@ -51,10 +51,10 @@ def get_mean_error(predicted_traj, true_traj, observed_length, maxNumPeds):
 def main():
     parser = argparse.ArgumentParser()
     # Observed length of the trajectory parameter
-    parser.add_argument('--obs_length', type=int, default=5,
+    parser.add_argument('--obs_length', type=int, default=8,
                         help='Observed length of the trajectory')
     # Predicted length of the trajectory parameter
-    parser.add_argument('--pred_length', type=int, default=3,
+    parser.add_argument('--pred_length', type=int, default=12,
                         help='Predicted length of the trajectory')
     # Test dataset
     parser.add_argument('--test_dataset', type=int, default=0,
@@ -80,7 +80,7 @@ def main():
 
     # Restore the model at the checkpoint
     saver.restore(sess, ckpt.model_checkpoint_path)
-
+    # saver.restore(sess, 'save/social_model.ckpt-800')
     # Dataset to get data from
     dataset = [sample_args.test_dataset]
 
